@@ -8,7 +8,7 @@ const products: Product[] = [
     description: 'High-quality wireless earbuds with noise cancellation technology and 24 hour battery life.',
     price: 129.99,
     discountedPrice: 99.99, // On promotion
-    imageUrl: 'https://images.pexels.com/photos/3780681/pexels-photo-3780681.jpeg',
+    imageUrl: 'https://www.paty.com.ar/assets/site/images/sections/products/packaging-mobile/classic.jpg?v=1.2',
     categories: ['electronics'],
     stock: 15,
     featured: true,
@@ -18,7 +18,7 @@ const products: Product[] = [
     name: 'Smart Watch',
     description: 'Track your fitness, receive notifications, and more with this modern smartwatch.',
     price: 199.99,
-    imageUrl: 'https://images.pexels.com/photos/437037/pexels-photo-437037.jpeg',
+    imageUrl: 'https://www.paty.com.ar/assets/site/images/sections/products/packaging-mobile/classic.jpg?v=1.2',
     categories: ['electronics'],
     stock: 8,
   },
