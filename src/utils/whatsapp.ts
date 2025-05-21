@@ -1,39 +1,28 @@
-import { CartItem } from '../types/product';
-import { formatCurrency } from './formatCurrency';
+// src/utils/whatsapp.ts
 
-export const sendToWhatsApp = (
-  cartItems: CartItem[],
-  customerName: string,
-  customerPhone: string,
-  customerEmail: string,
-  customerAddress: string
-): void => {
-  // Calculate total
-  const total = cartItems.reduce(
-    (sum, item) => sum + (item.product.discountedPrice || item.product.price) * item.quantity,
-    0
-  );
-  
-  // Create order message
-  let message = `¡Hola! He realizado una compra en VAFood.\n\n`;
-  message += `*Detalle del Pedido:*\n`;
-  
-  cartItems.forEach((item) => {
-    const price = item.product.discountedPrice || item.product.price;
-    message += `• ${item.product.name} (${item.quantity}x) - ${formatCurrency(price)} c/u\n`;
-  });
-  
-  message += `\n*Total: ${formatCurrency(total)}*\n\n`;
-  
-  // Encode for URL
-  const encodedMessage = encodeURIComponent(message);
-  
-  // Replace with your business phone number
-  const phoneNumber = '543415979346'; // Edit this with your WhatsApp number
-  
-  // Create WhatsApp URL
-  const whatsappUrl = `https://wa.me/${phoneNumber}?text=${encodedMessage}`;
-  
-  // Open in new tab
-  window.open(whatsappUrl, '_blank');
-};
+export interface OrderItem {
+  name: string;
+  price: number;
+  quantity: number;
+}
+export interface OrderData {
+  phone: string;
+  items: OrderItem[];
+  total: number;
+}
+
+// URL donde corre bot-server.js
+const BOT_URL = 'http://localhost:3000';
+
+export async function sendOrder(order: OrderData): Promise<boolean> {
+  try {
+    const res = await fetch(`${BOT_URL}/new-order`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(order),
+    });
+    return res.ok;
+  } catch {
+    return false;
+  }
+}
