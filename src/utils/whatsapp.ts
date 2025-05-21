@@ -29,7 +29,7 @@ export const sendToWhatsApp = (
   const encodedMessage = encodeURIComponent(message);
   
   // Replace with your business phone number
-  const phoneNumber = '1234567890'; // Edit this with your WhatsApp number
+  const phoneNumber = '543415979346'; // Edit this with your WhatsApp number
   
   // Create WhatsApp URL
   const whatsappUrl = `https://wa.me/${phoneNumber}?text=${encodedMessage}`;
