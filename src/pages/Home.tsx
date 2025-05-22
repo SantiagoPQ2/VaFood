@@ -1,39 +1,39 @@
 import React, { useState, useEffect } from 'react';
 import ProductCard from '../components/ProductCard';
 import CategoryFilter from '../components/CategoryFilter';
-import Header from '../components/Header';
 import Cart from '../components/Cart';
 import ProductDetail from '../components/ProductDetail';
 import products from '../data/products';
 import categories from '../data/categories';
 import { Product } from '../types/product';
 
-const Home: React.FC = () => {
+interface HomeProps {
+  isCartOpen: boolean;
+  onCloseCart: () => void;
+  searchQuery: string;
+}
+
+const Home: React.FC<HomeProps> = ({ isCartOpen, onCloseCart, searchQuery }) => {
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
   const [showPromos, setShowPromos] = useState(false);
   const [filteredProducts, setFilteredProducts] = useState<Product[]>(products);
-  const [isCartOpen, setIsCartOpen] = useState(false);
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
-  const [searchQuery, setSearchQuery] = useState('');
 
   useEffect(() => {
     let filtered = [...products];
     
-    // Apply category filter
     if (selectedCategory) {
       filtered = filtered.filter(product => 
         product.categories.includes(selectedCategory)
       );
     }
     
-    // Apply promo filter
     if (showPromos) {
       filtered = filtered.filter(product => 
         product.discountedPrice !== undefined
       );
     }
     
-    // Apply search filter
     if (searchQuery) {
       const query = searchQuery.toLowerCase();
       filtered = filtered.filter(product => 
@@ -53,14 +53,6 @@ const Home: React.FC = () => {
     setShowPromos(!showPromos);
   };
 
-  const handleOpenCart = () => {
-    setIsCartOpen(true);
-  };
-
-  const handleCloseCart = () => {
-    setIsCartOpen(false);
-  };
-
   const handleProductClick = (product: Product) => {
     setSelectedProduct(product);
     window.scrollTo(0, 0);
@@ -70,29 +62,19 @@ const Home: React.FC = () => {
     setSelectedProduct(null);
   };
 
-  const handleSearch = (query: string) => {
-    setSearchQuery(query);
-  };
-
   return (
     <div className="min-h-screen bg-gray-50">
-      <Header 
-        onOpenCart={handleOpenCart} 
-        onSearch={handleSearch}
-        searchQuery={searchQuery}
-      />
-      
       <main className="container mx-auto px-4 py-8">
         {selectedProduct ? (
           <ProductDetail product={selectedProduct} onBack={handleBackToProducts} />
         ) : (
           <div>
             <h1 className="text-3xl font-bold text-center text-gray-800 mb-8">
-              Shop Our Products
+              Nuestros Productos
             </h1>
             
             <div className="md:grid md:grid-cols-4 gap-6">
-              <div className="md:col-span-1">
+              <div className="md:col-span-1 mb-6 md:mb-0">
                 <CategoryFilter
                   categories={categories}
                   selectedCategory={selectedCategory}
@@ -106,11 +88,11 @@ const Home: React.FC = () => {
                 {filteredProducts.length === 0 ? (
                   <div className="text-center py-12">
                     <p className="text-lg text-gray-500">
-                      No products found matching your criteria.
+                      No se encontraron productos que coincidan con tu búsqueda.
                     </p>
                   </div>
                 ) : (
-                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                  <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
                     {filteredProducts.map((product) => (
                       <ProductCard
                         key={product.id}
@@ -126,7 +108,7 @@ const Home: React.FC = () => {
         )}
       </main>
       
-      <Cart isOpen={isCartOpen} onClose={handleCloseCart} />
+      <Cart isOpen={isCartOpen} onClose={onCloseCart} />
     </div>
   );
 };
