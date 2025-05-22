@@ -9,6 +9,8 @@ interface CartContextType {
   clearCart: () => void;
   totalItems: number;
   totalPrice: number;
+  subtotal: number;
+  discount: number;
 }
 
 const CartContext = createContext<CartContextType | undefined>(undefined);
@@ -18,18 +20,15 @@ export const CartProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
 
   const addToCart = (product: Product, quantity = 1) => {
     setCartItems((prevItems) => {
-      // Check if item already exists in cart
       const existingItemIndex = prevItems.findIndex(
         (item) => item.product.id === product.id
       );
 
       if (existingItemIndex > -1) {
-        // Update quantity of existing item
         const updatedItems = [...prevItems];
         updatedItems[existingItemIndex].quantity += quantity;
         return updatedItems;
       } else {
-        // Add new item
         return [...prevItems, { product, quantity }];
       }
     });
@@ -62,11 +61,21 @@ export const CartProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
 
   const totalItems = cartItems.reduce((total, item) => total + item.quantity, 0);
   
-  const totalPrice = cartItems.reduce(
+  const subtotal = cartItems.reduce(
     (total, item) => 
       total + (item.product.discountedPrice || item.product.price) * item.quantity, 
     0
   );
+
+  // Calculate discount based on subtotal
+  const getDiscount = (subtotal: number) => {
+    if (subtotal >= 1000) return subtotal * 0.05; // 5% discount
+    if (subtotal >= 500) return subtotal * 0.03; // 3% discount
+    return 0;
+  };
+
+  const discount = getDiscount(subtotal);
+  const totalPrice = subtotal - discount;
 
   return (
     <CartContext.Provider
@@ -78,6 +87,8 @@ export const CartProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
         clearCart,
         totalItems,
         totalPrice,
+        subtotal,
+        discount,
       }}
     >
       {children}
