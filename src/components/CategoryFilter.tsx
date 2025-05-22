@@ -30,7 +30,7 @@ const CategoryFilter: React.FC<CategoryFilterProps> = ({
           <button
             className={`px-3 py-1.5 rounded-full text-sm transition-colors w-full text-left ${
               selectedCategory === null
-                ? 'bg-teal-600 text-white'
+                ? 'bg-vafood-red text-white'
                 : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
             }`}
             onClick={() => onSelectCategory(null)}
@@ -43,7 +43,7 @@ const CategoryFilter: React.FC<CategoryFilterProps> = ({
               key={category.id}
               className={`px-3 py-1.5 rounded-full text-sm transition-colors w-full text-left ${
                 selectedCategory === category.id
-                  ? 'bg-teal-600 text-white'
+                  ? 'bg-vafood-red text-white'
                   : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
               }`}
               onClick={() => onSelectCategory(category.id)}
@@ -59,7 +59,7 @@ const CategoryFilter: React.FC<CategoryFilterProps> = ({
         <button
           className={`px-3 py-1.5 rounded-full text-sm transition-colors w-full text-left flex items-center ${
             showPromos
-              ? 'bg-orange-500 text-white'
+              ? 'bg-vafood-red text-white'
               : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
           }`}
           onClick={onTogglePromos}
@@ -70,7 +70,7 @@ const CategoryFilter: React.FC<CategoryFilterProps> = ({
               showPromos ? 'bg-white' : ''
             }`}
           >
-            {showPromos && <span className="w-2 h-2 rounded-full bg-orange-500"></span>}
+            {showPromos && <span className="w-2 h-2 rounded-full bg-vafood-red"></span>}
           </span>
         </button>
       </div>
