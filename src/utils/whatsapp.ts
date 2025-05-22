@@ -8,13 +8,21 @@ export const sendToWhatsApp = (
   customerEmail: string,
   customerAddress: string
 ): void => {
-  // Calculate total
-  const total = cartItems.reduce(
+  const subtotal = cartItems.reduce(
     (sum, item) => sum + (item.product.discountedPrice || item.product.price) * item.quantity,
     0
   );
+
+  // Calculate discount
+  let discount = 0;
+  if (subtotal >= 1000) {
+    discount = subtotal * 0.05; // 5% discount
+  } else if (subtotal >= 500) {
+    discount = subtotal * 0.03; // 3% discount
+  }
+
+  const total = subtotal - discount;
   
-  // Create order message
   let message = `¡Hola! He realizado una compra en VAFood.\n\n`;
   message += `*Detalle del Pedido:*\n`;
   
@@ -23,17 +31,17 @@ export const sendToWhatsApp = (
     message += `• ${item.product.name} (${item.quantity}x) - ${formatCurrency(price)} c/u\n`;
   });
   
-  message += `\n*Total: ${formatCurrency(total)}*\n\n`;
+  message += `\n*Subtotal: ${formatCurrency(subtotal)}*`;
   
-  // Encode for URL
+  if (discount > 0) {
+    message += `\n*Descuento: -${formatCurrency(discount)}*`;
+  }
+  
+  message += `\n*Total Final: ${formatCurrency(total)}*\n\n`;
+  
   const encodedMessage = encodeURIComponent(message);
-  
-  // Replace with your business phone number
-  const phoneNumber = '5493415979346'; // Edit this with your WhatsApp number
-  
-  // Create WhatsApp URL
+  const phoneNumber = '1234567890'; // Edit this with your WhatsApp number
   const whatsappUrl = `https://wa.me/${phoneNumber}?text=${encodedMessage}`;
   
-  // Open in new tab
   window.open(whatsappUrl, '_blank');
 };
