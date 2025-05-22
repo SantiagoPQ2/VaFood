@@ -1,9 +1,9 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { useCart } from '../context/CartContext';
 import CartItem from './CartItem';
 import { formatCurrency } from '../utils/formatCurrency';
 import { ShoppingBag, ArrowRight, X } from 'lucide-react';
-import { sendOrder } from '../utils/whatsapp';
+import { sendToWhatsApp } from '../utils/whatsapp';
 
 interface CartProps {
   isOpen: boolean;
@@ -12,43 +12,28 @@ interface CartProps {
 
 const Cart: React.FC<CartProps> = ({ isOpen, onClose }) => {
   const { cartItems, totalItems, totalPrice, clearCart } = useCart();
-  const [phone, setPhone] = useState('');
 
-  const handleFinishOrder = async () => {
+  const handleFinishOrder = () => {
     if (cartItems.length === 0) return;
-    if (!phone) {
-      alert('Por favor ingresa tu número de WhatsApp');
-      return;
-    }
-
-    const items = cartItems.map(i => ({
-      name: i.product.title || i.product.name,
-      price: i.product.price,
-      quantity: i.quantity,
-    }));
-
-    const success = await sendOrder({ phone, items, total: totalPrice });
-    if (success) {
-      alert('¡Pedido enviado! Revisa tu WhatsApp.');
-      clearCart();
-      onClose();
-    } else {
-      alert('Hubo un error al enviar el pedido. Intenta de nuevo.');
-    }
+    
+    // Send to WhatsApp with empty customer info - it will be filled by the customer in the message
+    sendToWhatsApp(cartItems, '', '', '', '');
+    clearCart();
+    onClose();
   };
 
   return (
     <div className={`fixed inset-0 z-40 ${isOpen ? 'visible' : 'invisible'}`}>
       {/* Backdrop */}
-      <div
+      <div 
         className={`fixed inset-0 bg-black transition-opacity duration-300 ${
           isOpen ? 'opacity-50' : 'opacity-0'
-        }`}
+        }`} 
         onClick={onClose}
       ></div>
-
+      
       {/* Cart panel */}
-      <div
+      <div 
         className={`fixed right-0 top-0 h-full w-full max-w-md bg-white shadow-xl transform transition-transform duration-300 ease-in-out ${
           isOpen ? 'translate-x-0' : 'translate-x-full'
         }`}
@@ -63,7 +48,7 @@ const Cart: React.FC<CartProps> = ({ isOpen, onClose }) => {
                 <span className="ml-2 text-sm text-gray-600">({totalItems} items)</span>
               )}
             </h2>
-            <button
+            <button 
               onClick={onClose}
               className="p-2 text-gray-400 hover:text-gray-500"
               aria-label="Close cart"
@@ -71,7 +56,7 @@ const Cart: React.FC<CartProps> = ({ isOpen, onClose }) => {
               <X size={20} />
             </button>
           </div>
-
+          
           {/* Cart content */}
           <div className="flex-grow overflow-y-auto p-4">
             {cartItems.length === 0 ? (
@@ -81,30 +66,16 @@ const Cart: React.FC<CartProps> = ({ isOpen, onClose }) => {
               </div>
             ) : (
               <div className="space-y-2">
-                {cartItems.map(item => (
+                {cartItems.map((item) => (
                   <CartItem key={item.product.id} item={item} />
                 ))}
               </div>
             )}
           </div>
-
-          {/* Footer with total, phone input and finish button */}
+          
+          {/* Footer with total and finish button */}
           {cartItems.length > 0 && (
             <div className="border-t border-gray-200 p-4">
-              {/* Input de WhatsApp */}
-              <div className="mb-4">
-                <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Tu WhatsApp:
-                </label>
-                <input
-                  type="text"
-                  placeholder="+54911xxxxxxx"
-                  value={phone}
-                  onChange={e => setPhone(e.target.value)}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-teal-500"
-                />
-              </div>
-
               <div className="flex justify-between text-base font-medium text-gray-800 mb-4">
                 <p>Total</p>
                 <p>{formatCurrency(totalPrice)}</p>
