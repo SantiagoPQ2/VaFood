@@ -40,7 +40,7 @@ export const sendToWhatsApp = (
   message += `\n*Total Final: ${formatCurrency(total)}*\n\n`;
   
   const encodedMessage = encodeURIComponent(message);
-  const phoneNumber = '1234567890'; // Edit this with your WhatsApp number
+  const phoneNumber = '5493415979346'; // Edit this with your WhatsApp number
   const whatsappUrl = `https://wa.me/${phoneNumber}?text=${encodedMessage}`;
   
   window.open(whatsappUrl, '_blank');
