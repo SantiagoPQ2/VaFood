@@ -11,12 +11,11 @@ interface CartProps {
 }
 
 const Cart: React.FC<CartProps> = ({ isOpen, onClose }) => {
-  const { cartItems, totalItems, totalPrice, clearCart } = useCart();
+  const { cartItems, totalItems, totalPrice, subtotal, discount, clearCart } = useCart();
 
   const handleFinishOrder = () => {
     if (cartItems.length === 0) return;
     
-    // Send to WhatsApp with empty customer info - it will be filled by the customer in the message
     sendToWhatsApp(cartItems, '', '', '', '');
     clearCart();
     onClose();
@@ -24,7 +23,6 @@ const Cart: React.FC<CartProps> = ({ isOpen, onClose }) => {
 
   return (
     <div className={`fixed inset-0 z-40 ${isOpen ? 'visible' : 'invisible'}`}>
-      {/* Backdrop */}
       <div 
         className={`fixed inset-0 bg-black transition-opacity duration-300 ${
           isOpen ? 'opacity-50' : 'opacity-0'
@@ -32,14 +30,12 @@ const Cart: React.FC<CartProps> = ({ isOpen, onClose }) => {
         onClick={onClose}
       ></div>
       
-      {/* Cart panel */}
       <div 
         className={`fixed right-0 top-0 h-full w-full max-w-md bg-white shadow-xl transform transition-transform duration-300 ease-in-out ${
           isOpen ? 'translate-x-0' : 'translate-x-full'
         }`}
       >
         <div className="flex flex-col h-full">
-          {/* Header */}
           <div className="flex items-center justify-between p-4 border-b border-gray-200">
             <h2 className="text-lg font-semibold text-gray-800 flex items-center">
               <ShoppingBag className="mr-2" size={20} />
@@ -57,7 +53,6 @@ const Cart: React.FC<CartProps> = ({ isOpen, onClose }) => {
             </button>
           </div>
           
-          {/* Cart content */}
           <div className="flex-grow overflow-y-auto p-4">
             {cartItems.length === 0 ? (
               <div className="flex flex-col items-center justify-center h-full text-gray-500">
@@ -73,16 +68,27 @@ const Cart: React.FC<CartProps> = ({ isOpen, onClose }) => {
             )}
           </div>
           
-          {/* Footer with total and finish button */}
           {cartItems.length > 0 && (
             <div className="border-t border-gray-200 p-4">
-              <div className="flex justify-between text-base font-medium text-gray-800 mb-4">
-                <p>Total</p>
-                <p>{formatCurrency(totalPrice)}</p>
+              <div className="space-y-2 mb-4">
+                <div className="flex justify-between text-base text-gray-600">
+                  <p>Subtotal</p>
+                  <p>{formatCurrency(subtotal)}</p>
+                </div>
+                {discount > 0 && (
+                  <div className="flex justify-between text-base text-green-600">
+                    <p>Descuento</p>
+                    <p>-{formatCurrency(discount)}</p>
+                  </div>
+                )}
+                <div className="flex justify-between text-lg font-medium text-gray-800 pt-2 border-t">
+                  <p>Total</p>
+                  <p>{formatCurrency(totalPrice)}</p>
+                </div>
               </div>
               <button
                 onClick={handleFinishOrder}
-                className="w-full flex items-center justify-center px-6 py-3 border border-transparent rounded-md shadow-sm text-base font-medium text-white bg-teal-600 hover:bg-teal-700"
+                className="w-full flex items-center justify-center px-6 py-3 border border-transparent rounded-md shadow-sm text-base font-medium text-white bg-vafood-red hover:bg-vafood-black"
               >
                 Finalizar Pedido
                 <ArrowRight size={16} className="ml-2" />
@@ -95,4 +101,4 @@ const Cart: React.FC<CartProps> = ({ isOpen, onClose }) => {
   );
 };
 
-export default Cart;
+export default Cart
