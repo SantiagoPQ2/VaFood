@@ -16,6 +16,11 @@ const Cart: React.FC<CartProps> = ({ isOpen, onClose }) => {
   const handleFinishOrder = () => {
     if (cartItems.length === 0) return;
     
+    if (totalPrice < 30000) {
+      alert('El monto mínimo de compra es $30.000');
+      return;
+    }
+    
     sendToWhatsApp(cartItems, '', '', '', '');
     clearCart();
     onClose();
@@ -85,10 +90,18 @@ const Cart: React.FC<CartProps> = ({ isOpen, onClose }) => {
                   <p>Total</p>
                   <p>{formatCurrency(totalPrice)}</p>
                 </div>
+                {totalPrice < 30000 && (
+                  <p className="text-red-600 text-sm mt-2">
+                    El monto mínimo de compra es {formatCurrency(30000)}
+                  </p>
+                )}
               </div>
               <button
                 onClick={handleFinishOrder}
-                className="w-full flex items-center justify-center px-6 py-3 border border-transparent rounded-md shadow-sm text-base font-medium text-white bg-vafood-red hover:bg-vafood-black"
+                className={`w-full flex items-center justify-center px-6 py-3 border border-transparent rounded-md shadow-sm text-base font-medium text-white ${
+                  totalPrice >= 30000 ? 'bg-vafood-red hover:bg-vafood-black' : 'bg-gray-400 cursor-not-allowed'
+                }`}
+                disabled={totalPrice < 30000}
               >
                 Finalizar Pedido
                 <ArrowRight size={16} className="ml-2" />
@@ -101,4 +114,4 @@ const Cart: React.FC<CartProps> = ({ isOpen, onClose }) => {
   );
 };
 
-export default Cart
+export default Cart;
