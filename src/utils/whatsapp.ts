@@ -2,11 +2,7 @@ import { CartItem } from '../types/product';
 import { formatCurrency } from './formatCurrency';
 
 export const sendToWhatsApp = (
-  cartItems: CartItem[],
-  customerName: string,
-  customerPhone: string,
-  customerEmail: string,
-  customerAddress: string
+  cartItems: CartItem[]
 ): void => {
   const subtotal = cartItems.reduce(
     (sum, item) => sum + (item.product.discountedPrice || item.product.price) * item.quantity,
