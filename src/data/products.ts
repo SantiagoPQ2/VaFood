@@ -11,6 +11,15 @@ const products: Product[] = [
     stock: 30000,
   },
   {
+    id: '445635',
+    name: 'Paty Express X2',
+    description: 'Pack de 4 hamburguesas express',
+    price: 2164,
+    imageUrl: 'https://images.pexels.com/photos/1639557/pexels-photo-1639557.jpeg',
+    categories: ['hamburguesas'],
+    stock: 30000,
+  },
+  {
     id: '338754',
     name: 'Barfy Flow 2+2 X24',
     description: 'Pack de 24 hamburguesas Barfy Flow',
