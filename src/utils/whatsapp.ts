@@ -24,6 +24,21 @@ export const sendToWhatsApp = (
   const total = subtotal - discount;
   
   let message = `¡Hola! He realizado una compra en VAFood.\n\n`;
+
+  if (
+    customerName ||
+    customerPhone ||
+    customerEmail ||
+    customerAddress
+  ) {
+    message += `*Datos del Cliente:*\n`;
+    if (customerName) message += `Nombre: ${customerName}\n`;
+    if (customerPhone) message += `Teléfono: ${customerPhone}\n`;
+    if (customerEmail) message += `Email: ${customerEmail}\n`;
+    if (customerAddress) message += `Dirección: ${customerAddress}\n`;
+    message += `\n`;
+  }
+
   message += `*Detalle del Pedido:*\n`;
   
   cartItems.forEach((item) => {
