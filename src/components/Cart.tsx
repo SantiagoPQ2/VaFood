@@ -21,7 +21,7 @@ const Cart: React.FC<CartProps> = ({ isOpen, onClose }) => {
       return;
     }
     
-    sendToWhatsApp(cartItems);
+    sendToWhatsApp(cartItems, '', '', '', '');
     clearCart();
     onClose();
   };
